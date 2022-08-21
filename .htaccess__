@@ -1,0 +1,30 @@
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(css|js|images)/(.*)$ public/$1/$2 [L,NC]
+
+# force ssl
+RewriteCond     %{SERVER_PORT} ^80$
+RewriteRule     ^(.*)$ https://%{SERVER_NAME}%{REQUEST_URI} [L,R]
+</IfModule>
+
+<Files ~ "\.(jpg|jpeg|png|mp4)$">
+  Header set Access-Control-Allow-Origin *
+  Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+  Header always set Access-Control-Allow-Headers "*"
+</Files>
+<Files ~ "\.(env|production.env|local.env|env.*|json|config.js|md|gitignore|gitattributes|lock)$">
+    Order allow,deny
+    Deny from all
+</Files>
